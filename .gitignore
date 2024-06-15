@@ -1,0 +1,5 @@
+*.jpg
+.env
+download/*
+aaa.py
+aaa.txt
