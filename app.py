@@ -54,7 +54,8 @@ if submit:
     with st.spinner('Wait for it...'):
 
         imgurls_list = input_imgurls.split('\n')
-        file_ids = [ url.split('/')[-2] for url in imgurls_list]
+        # file_ids = [ url.split('/')[-2] for url in imgurls_list] # if url is in complete format
+        file_ids = [ url.split('=')[1] for url in imgurls_list] # if url is in shorten format, i.e. "open?id="
         prefix = 'https://drive.google.com/uc?export=download&id='
 
         dlpath = tempfile.mkdtemp(suffix=None, prefix="download", dir=None)
