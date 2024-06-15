@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv() ## load all the environemnt variables
+
 import streamlit as st
 import os
 import google.generativeai as genai
@@ -10,7 +13,7 @@ import shutil
 import gdown
 
 ## Configure our API key
-genai.configure(api_key= os.environ.get('GOOGLE_API_KEY'))
+genai.configure(api_key= os.getenv('GOOGLE_API_KEY'))
 
 ## Function to load Google Gemini model and provide SQL query as response
 def get_gemini_response(prompt, img):
@@ -55,7 +58,7 @@ if submit:
         dlpath = 'download'
         if os.path.exists(dlpath):
             shutil.rmtree(dlpath)
-            os.mkdir(dlpath)
+        os.mkdir(dlpath)
         os.chdir(dlpath)
         [gdown.download(prefix + file_id) for file_id in file_ids]
         os.chdir('../')
