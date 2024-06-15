@@ -9,6 +9,7 @@ from IPython.display import display, Image
 from io import StringIO
 import pandas as pd
 import csv
+import tempfile
 import shutil
 import gdown
 
@@ -55,15 +56,21 @@ if submit:
         imgurls_list = input_imgurls.split('\n')
         file_ids = [ url.split('/')[-2] for url in imgurls_list]
         prefix = 'https://drive.google.com/uc?export=download&id='
-        dlpath = 'download'
+
+        dlpath = tempfile.mkdtemp(suffix=None, prefix="download", dir=None)
+        
         if os.path.exists(dlpath):
             shutil.rmtree(dlpath)
+            print('Temp dir reset!')
+        
         os.mkdir(dlpath)
-        os.chdir(dlpath)
-        [gdown.download(prefix + file_id) for file_id in file_ids]
-        os.chdir('../')
+        os.chdir(dlpath) # go to temp download dir
 
-        imgfolder_full_path = os.path.join(os.getcwd(),'download')
+        [gdown.download(prefix + file_id) for file_id in file_ids]
+
+        os.chdir('../') # go back to default dir
+
+        imgfolder_full_path = dlpath
         imgfile_list = os.listdir(imgfolder_full_path)
         counter = 1
         filenumber_list = []
@@ -93,6 +100,10 @@ if submit:
     output = df.to_csv(index=False)
 
     st.download_button(label= 'Download CSV', data= output, file_name= 'output.csv', mime= 'text/csv')
+
+    # Delete temp dir
+    shutil.rmtree(dlpath, ignore_errors=True)
+    print('Temp dir deleted!')
 
 
 
